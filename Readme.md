@@ -29,10 +29,12 @@ $ cordova plugin add https://github.com/macdonst/SpeechRecognitionPlugin
             </div>
         </ion-content>
     </ion-pane>
-</body>```
+</body>
+```
 
-4. app.js
-```javascript
+4. app.js  
+
+~~~javascript
 angular.module('starter', ['ionic'])
 
 .controller('AppCtrl', function($scope) {
@@ -64,4 +66,4 @@ angular.module('starter', ['ionic'])
     recognition.start();
   };
 });
-```
+~~~~
