@@ -8,23 +8,60 @@ $ cd speech-to-text
 $ cordova plugin add https://github.com/macdonst/SpeechRecognitionPlugin
 
 3. index.html
-        <body ng-app="starter">
-            <ion-pane ng-controller="AppCtrl">
-                <ion-header-bar class="bar-stable">
-                    <h1 class="title">Cordova Text-to-Speech</h1>
-                </ion-header-bar>
-                <ion-content class="padding">
-                    <div class="list list-inset">
-                        <label class="item item-input">
-                            <i class="icon ion-speakerphone placeholder-icon"></i>
-                            <input type="text" placeholder="Let me speak..." ng-model="data.speechText">
-                        </label>
-                    </div>
-                    <button class="button button-full button-positive" ng-click="speakText()"> Speak! </button>
-                    <button class="button button-full button-positive"ng-click="record()"> Record </button>
-                        <div class="card">
-                            <div class="item item-text-wrap"> {{recognizedText}} </div>
-                        </div>
-                </ion-content>
-            </ion-pane>
-        </body>
+
+```html
+<body ng-app="starter">
+    <ion-pane ng-controller="AppCtrl">
+        <ion-header-bar class="bar-stable">
+            <h1 class="title">Cordova Text-to-Speech</h1>
+        </ion-header-bar>
+        <ion-content class="padding">
+            <div class="list list-inset">
+                <label class="item item-input">
+                    <i class="icon ion-speakerphone placeholder-icon"></i>
+                    <input type="text" placeholder="Let me speak..." ng-model="data.speechText">
+                </label>
+            </div>
+            <button class="button button-full button-positive" ng-click="speakText()"> Speak! </button>
+            <button class="button button-full button-positive"ng-click="record()"> Record </button>
+            <div class="card">
+                <div class="item item-text-wrap"> {{recognizedText}} </div>
+            </div>
+        </ion-content>
+    </ion-pane>
+</body>```
+
+4. app.js
+```javascript
+angular.module('starter', ['ionic'])
+
+.controller('AppCtrl', function($scope) {
+  $scope.data = {
+    speechText: ''
+  };
+  $scope.recognizedText = '';
+
+  $scope.speakText = function() {
+    TTS.speak({
+           text: $scope.data.speechText,
+           locale: 'en-GB',
+           rate: 1.5
+       }, function () {
+           // Do Something after success
+       }, function (reason) {
+           // Handle the error case
+       });
+  };
+
+  $scope.record = function() {
+    var recognition = new SpeechRecognition();
+    recognition.onresult = function(event) {
+        if (event.results.length > 0) {
+            $scope.recognizedText = event.results[0][0].transcript;
+            $scope.$apply()
+        }
+    };
+    recognition.start();
+  };
+});
+```
